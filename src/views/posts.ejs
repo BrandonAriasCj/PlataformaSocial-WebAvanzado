@@ -21,41 +21,69 @@
 
   <div class="container">
     <h4 class="center-align">Bienvenido a Social Media</h4>
+    <div class="btn-flat"><a href="/posts/add">Añadir post</a></div>
 
     <div class="row">
+      <% posts.forEach(post => { %>
       <!-- Card del Post -->
       <div class="col s12 m6 l4">
         <div class="card">
+          <% if (post.imageUrl) { %>
           <div class="card-image">
-            <img src="https://media.istockphoto.com/id/627795510/photo/example.jpg?s=612x612&w=0&k=20&c=lpUf5rjPVd6Kl_M6heqC8sUncR4FLmtsRzeYdTr5X_I=" alt="Imagen del post">
+            <img src="<%= post.imageUrl %>" alt="Imagen del post">
           </div>
+          <% } %>
           <div class="card-content">
-            <span class="card-title">Título del Post</span>
+            <span class="card-title"><%= post.title %></span>
+            <p><%= post.content %></p>
+            <% if (post.hashtags) { %>
             <p>
-              Este es un ejemplo de contenido del post. Aquí puedes escribir la descripción o texto relacionado.
+              <strong>Hashtags:</strong>
+              <% const hashtagArray = post.hashtags.split(' ').filter(tag => tag.trim() !== ''); %>
+              <% hashtagArray.forEach(tag => { %>
+                <span class="chip"><%= tag %></span>
+              <% }); %>
             </p>
-            <p>
-              <strong>Hashtags:</strong>  
-              <span class="chip">#ejemplo</span>
-              <span class="chip">#social</span>
-              <span class="chip">#media</span>
-              <span class="chip">#práctica</span>
-              <span class="chip">#nodejs</span>
+            <% } %>
+            <p class="grey-text">
+              <small>Creado: <%= new Date(post.createdAt).toLocaleDateString() %></small>
             </p>
           </div>
           <div class="card-action">
             <div class="right">
-              <a href="#!" class="btn-flat"><i class="material-icons teal-text">edit</i></a>
-              <a href="#!" class="btn-flat"><i class="material-icons red-text">delete</i></a>
+              <a href="#" class="btn-flat"><i class="material-icons teal-text">edit</i></a>
+              <button onclick="deletePost('<%= post._id %>')" class="btn-flat"><i class="material-icons red-text">delete</i></button>
             </div>
-            <span><strong>Autor:</strong> Juan Pérez</span>
+            <span><strong>Autor:</strong> <%= post.user ? post.user.name : 'Anónimo' %></span>
           </div>
         </div>
       </div>
+      <% }); %>
     </div>
   </div>
 
   <!-- Importar Materialize JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  
+  <script>
+    function deletePost(postId) {
+      if (confirm('¿Estás seguro de que quieres eliminar este post?')) {
+        fetch(`/posts/${postId}`, {
+          method: 'DELETE'
+        })
+        .then(response => {
+          if (response.ok) {
+            location.reload();
+          } else {
+            alert('Error al eliminar el post');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Error al eliminar el post');
+        });
+      }
+    }
+  </script>
 </body>
 </html>

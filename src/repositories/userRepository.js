@@ -12,6 +12,10 @@ class UserRepository {
     async findById(id) {
         return await User.findById(id);
     }
+
+    async update(user){
+        return await User.update(user)
+    }
 }
 
 export default new UserRepository();

@@ -25,6 +25,7 @@ app.use(express.static(path.join(__dirname,"src", "public"))); // Archivos está
 app.use("/", homeRoutes);
 app.use("/posts", postRoutes);
 
+
 connectDB(); //Conexión a la base de datos
 
 const PORT = process.env.PORT || 3000;

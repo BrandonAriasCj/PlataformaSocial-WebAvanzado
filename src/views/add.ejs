@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Añadir Post</title>
+  <!-- Materialize CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+  <!-- Iconos de Google -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body class="grey lighten-4">
+
+  <!-- Navbar -->
+  <nav>
+    <div class="nav-wrapper teal">
+      <a href="/" class="brand-logo center">Social Media</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h4 class="center-align">Añadir un nuevo Post</h4>
+
+    <!-- Formulario -->
+    <div class="row">
+      <form action="/posts" method="POST" class="col s12">
+        
+        <!-- Título -->
+        <div class="input-field">
+          <input id="title" name="title" type="text" class="validate" required>
+          <label for="title">Título del Post</label>
+        </div>
+
+        <!-- Contenido -->
+        <div class="input-field">
+          <textarea id="content" name="content" class="materialize-textarea" required></textarea>
+          <label for="content">Contenido</label>
+        </div>
+
+        <!-- Imagen -->
+        <div class="input-field">
+          <input id="imageUrl" name="imageUrl" type="url" class="validate">
+          <label for="imageUrl">URL de la imagen</label>
+        </div>
+
+        <!-- Hashtags -->
+        <div class="input-field">
+          <input id="hashtags" name="hashtags" type="text" placeholder="#ejemplo #social #nodejs">
+          <label for="hashtags">Hashtags (separados por espacio)</label>
+        </div>
+
+
+        <!-- Botón -->
+        <div class="center-align">
+          <button type="submit" class="btn waves-effect waves-light teal">
+            <i class="material-icons left">send</i> Publicar
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- Materialize JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
