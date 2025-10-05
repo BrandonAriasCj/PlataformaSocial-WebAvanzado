@@ -1,0 +1,60 @@
+<div class="container">
+    <div class="row">
+        <div class="col s12">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title center-align">
+                        <i class="material-icons large blue-text">dashboard</i>
+                        <h4>Dashboard de Usuario</h4>
+                    </span>
+                    
+                    <div class="row">
+                        <div class="col s12 center-align">
+                            <h5>¡Bienvenido, <%= user.name %> <%= user.lastName %>!</h5>
+                            <p class="flow-text">Aquí están tus datos personales:</p>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col s12 m6">
+                            <div class="card blue lighten-5">
+                                <div class="card-content">
+                                    <span class="card-title">Información Personal</span>
+                                    <p><strong>Nombre:</strong> <%= user.name %> <%= user.lastName %></p>
+                                    <p><strong>Email:</strong> <%= user.email %></p>
+                                    <p><strong>Teléfono:</strong> <%= user.phoneNumber %></p>
+                                    <p><strong>Edad:</strong> <%= user.age %> años</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col s12 m6">
+                            <div class="card green lighten-5">
+                                <div class="card-content">
+                                    <span class="card-title">Información Adicional</span>
+                                    <% if (user.url_profile) { %>
+                                        <p><strong>Perfil:</strong> <a href="<%= user.url_profile %>" target="_blank">Ver perfil</a></p>
+                                    <% } %>
+                                    <% if (user.address) { %>
+                                        <p><strong>Dirección:</strong> <%= user.address %></p>
+                                    <% } %>
+                                    <p><strong>Miembro desde:</strong> <%= new Date(user.createdAt).toLocaleDateString() %></p>
+                                    <p><strong>Rol:</strong> <%= user.roles.join(', ') %></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col s12 center-align">
+                            <a href="/profile" class="btn waves-effect waves-light blue">
+                                <i class="material-icons left">edit</i>
+                                Editar Perfil
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

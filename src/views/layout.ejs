@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title || 'JWT Auth App' %></title>
+    
+    <!-- Materialize CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f5f5;
+        }
+        .navbar-fixed {
+            z-index: 1000;
+        }
+        .main-content {
+            margin-top: 80px;
+            min-height: calc(100vh - 80px);
+        }
+        .card {
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .btn {
+            border-radius: 4px;
+        }
+        .input-field input:focus + label {
+            color: #1976d2 !important;
+        }
+        .input-field input:focus {
+            border-bottom: 1px solid #1976d2 !important;
+            box-shadow: 0 1px 0 0 #1976d2 !important;
+        }
+        .error-message {
+            color: #f44336;
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+        .success-message {
+            color: #4caf50;
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="blue darken-2">
+        <div class="nav-wrapper container">
+            <a href="/" class="brand-logo">JWT Auth</a>
+            <a href="#" data-target="mobile-nav" class="sidenav-trigger">
+                <i class="material-icons">menu</i>
+            </a>
+            <ul class="right hide-on-med-and-down">
+                <% if (typeof user !== 'undefined' && user) { %>
+                    <li><a href="/dashboard">Dashboard</a></li>
+                    <li><a href="/profile">Mi Perfil</a></li>
+                    <% if (userRoles && userRoles.includes('admin')) { %>
+                        <li><a href="/admin">Admin</a></li>
+                    <% } %>
+                    <li><a href="/logout">Cerrar Sesión</a></li>
+                <% } else { %>
+                    <li><a href="/signIn">Iniciar Sesión</a></li>
+                    <li><a href="/signUp">Registrarse</a></li>
+                <% } %>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Mobile Navigation -->
+    <ul class="sidenav" id="mobile-nav">
+        <% if (typeof user !== 'undefined' && user) { %>
+            <li><a href="/dashboard">Dashboard</a></li>
+            <li><a href="/profile">Mi Perfil</a></li>
+            <% if (userRoles && userRoles.includes('admin')) { %>
+                <li><a href="/admin">Admin</a></li>
+            <% } %>
+            <li><a href="/logout">Cerrar Sesión</a></li>
+        <% } else { %>
+            <li><a href="/signIn">Iniciar Sesión</a></li>
+            <li><a href="/signUp">Registrarse</a></li>
+        <% } %>
+    </ul>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <%- body %>
+    </main>
+
+    <!-- Footer -->
+    <footer class="page-footer blue darken-2">
+        <div class="container">
+            <div class="row">
+                <div class="col l6 s12">
+                    <h5 class="white-text">JWT Authentication App</h5>
+                    <p class="grey-text text-lighten-4">Sistema de autenticación con JWT y roles.</p>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            <div class="container">
+                © 2024 JWT Auth App
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        // Initialize Materialize components
+        document.addEventListener('DOMContentLoaded', function() {
+            M.Sidenav.init(document.querySelectorAll('.sidenav'));
+            M.FormSelect.init(document.querySelectorAll('select'));
+            M.Datepicker.init(document.querySelectorAll('.datepicker'));
+        });
+    </script>
+</body>
+</html>

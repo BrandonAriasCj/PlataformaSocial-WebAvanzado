@@ -1,0 +1,175 @@
+<div class="container">
+    <div class="row">
+        <div class="col s12">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title center-align">
+                        <i class="material-icons large blue-text">admin_panel_settings</i>
+                        <h4>Dashboard de Administrador</h4>
+                    </span>
+                    
+                    <div class="row">
+                        <div class="col s12 center-align">
+                            <h5>Panel de Administración</h5>
+                            <p class="flow-text">Gestiona todos los usuarios del sistema</p>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col s12">
+                            <div class="card">
+                                <div class="card-content">
+                                    <span class="card-title">Lista de Usuarios</span>
+                                    <div class="table-responsive">
+                                        <table class="striped" id="usersTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Nombre</th>
+                                                    <th>Email</th>
+                                                    <th>Teléfono</th>
+                                                    <th>Edad</th>
+                                                    <th>Roles</th>
+                                                    <th>Registro</th>
+                                                    <th>Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="usersTableBody">
+                                                <tr>
+                                                    <td colspan="7" class="center-align">
+                                                        <div class="preloader-wrapper small active">
+                                                            <div class="spinner-layer spinner-blue-only">
+                                                                <div class="circle-clipper left">
+                                                                    <div class="circle"></div>
+                                                                </div>
+                                                                <div class="gap-patch">
+                                                                    <div class="circle"></div>
+                                                                </div>
+                                                                <div class="circle-clipper right">
+                                                                    <div class="circle"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        Cargando usuarios...
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for user details -->
+<div id="userModal" class="modal">
+    <div class="modal-content">
+        <h4 id="modalTitle">Detalles del Usuario</h4>
+        <div id="userDetails">
+            <!-- User details will be loaded here -->
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cerrar</a>
+    </div>
+</div>
+
+<script>
+// Load users data
+async function loadUsers() {
+    try {
+        const token = sessionStorage.getItem('token');
+        const response = await fetch('/api/users', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        if (response.ok) {
+            const result = await response.json();
+            displayUsers(result.users);
+        } else {
+            M.toast({html: 'Error al cargar usuarios', classes: 'red'});
+        }
+    } catch (error) {
+        M.toast({html: 'Error de conexión', classes: 'red'});
+    }
+}
+
+// Display users in table
+function displayUsers(users) {
+    const tbody = document.getElementById('usersTableBody');
+    tbody.innerHTML = '';
+    
+    users.forEach(user => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${user.name} ${user.lastName}</td>
+            <td>${user.email}</td>
+            <td>${user.phoneNumber}</td>
+            <td>${user.age} años</td>
+            <td>${user.roles.join(', ')}</td>
+            <td>${new Date(user.createdAt).toLocaleDateString()}</td>
+            <td>
+                <button class="btn-small waves-effect waves-light blue" onclick="showUserDetails('${user.id}')">
+                    <i class="material-icons">visibility</i>
+                </button>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+// Show user details in modal
+async function showUserDetails(userId) {
+    try {
+        const token = sessionStorage.getItem('token');
+        const response = await fetch(`/api/users/${userId}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        if (response.ok) {
+            const result = await response.json();
+            const user = result.user;
+            
+            document.getElementById('modalTitle').textContent = `Detalles de ${user.name} ${user.lastName}`;
+            document.getElementById('userDetails').innerHTML = `
+                <div class="row">
+                    <div class="col s12 m6">
+                        <p><strong>Nombre:</strong> ${user.name} ${user.lastName}</p>
+                        <p><strong>Email:</strong> ${user.email}</p>
+                        <p><strong>Teléfono:</strong> ${user.phoneNumber}</p>
+                        <p><strong>Edad:</strong> ${user.age} años</p>
+                    </div>
+                    <div class="col s12 m6">
+                        <p><strong>Fecha de Nacimiento:</strong> ${new Date(user.birthdate).toLocaleDateString()}</p>
+                        <p><strong>Dirección:</strong> ${user.address || 'No especificada'}</p>
+                        <p><strong>Perfil:</strong> ${user.url_profile ? `<a href="${user.url_profile}" target="_blank">Ver perfil</a>` : 'No especificado'}</p>
+                        <p><strong>Roles:</strong> ${user.roles.join(', ')}</p>
+                        <p><strong>Miembro desde:</strong> ${new Date(user.createdAt).toLocaleDateString()}</p>
+                    </div>
+                </div>
+            `;
+            
+            const modal = M.Modal.getInstance(document.getElementById('userModal'));
+            modal.open();
+        } else {
+            M.toast({html: 'Error al cargar detalles del usuario', classes: 'red'});
+        }
+    } catch (error) {
+        M.toast({html: 'Error de conexión', classes: 'red'});
+    }
+}
+
+// Initialize modals and load data
+document.addEventListener('DOMContentLoaded', function() {
+    M.Modal.init(document.querySelectorAll('.modal'));
+    loadUsers();
+});
+</script>

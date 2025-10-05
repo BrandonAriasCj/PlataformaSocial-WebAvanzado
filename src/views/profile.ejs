@@ -1,0 +1,153 @@
+<div class="container">
+    <div class="row">
+        <div class="col s12 m10 l8 offset-m1 offset-l2">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title center-align">
+                        <i class="material-icons large blue-text">account_circle</i>
+                        <h4>Mi Perfil</h4>
+                    </span>
+                    
+                    <form id="profileForm">
+                        <div class="row">
+                            <div class="input-field col s12 m6">
+                                <i class="material-icons prefix">person</i>
+                                <input id="name" name="name" type="text" class="validate" required>
+                                <label for="name">Nombre</label>
+                            </div>
+                            
+                            <div class="input-field col s12 m6">
+                                <i class="material-icons prefix">person_outline</i>
+                                <input id="lastName" name="lastName" type="text" class="validate" required>
+                                <label for="lastName">Apellido</label>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="input-field col s12 m6">
+                                <i class="material-icons prefix">phone</i>
+                                <input id="phoneNumber" name="phoneNumber" type="tel" class="validate" required>
+                                <label for="phoneNumber">Teléfono</label>
+                            </div>
+                            
+                            <div class="input-field col s12 m6">
+                                <i class="material-icons prefix">cake</i>
+                                <input id="birthdate" name="birthdate" type="date" class="validate" required>
+                                <label for="birthdate">Fecha de Nacimiento</label>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <i class="material-icons prefix">email</i>
+                                <input id="email" name="email" type="email" class="validate" disabled>
+                                <label for="email">Email (No editable)</label>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="input-field col s12 m6">
+                                <i class="material-icons prefix">link</i>
+                                <input id="url_profile" name="url_profile" type="url" class="validate">
+                                <label for="url_profile">URL del Perfil</label>
+                            </div>
+                            
+                            <div class="input-field col s12 m6">
+                                <i class="material-icons prefix">location_on</i>
+                                <input id="address" name="address" type="text" class="validate">
+                                <label for="address">Dirección</label>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col s12 center-align">
+                                <button class="btn waves-effect waves-light blue" type="submit">
+                                    Actualizar Perfil
+                                    <i class="material-icons right">save</i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Load user data
+async function loadUserData() {
+    try {
+        const token = sessionStorage.getItem('token');
+        const response = await fetch('/api/users/me', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        if (response.ok) {
+            const result = await response.json();
+            const user = result.user;
+            
+            // Fill form with user data
+            document.getElementById('name').value = user.name;
+            document.getElementById('lastName').value = user.lastName;
+            document.getElementById('phoneNumber').value = user.phoneNumber;
+            document.getElementById('birthdate').value = user.birthdate.split('T')[0];
+            document.getElementById('email').value = user.email;
+            document.getElementById('url_profile').value = user.url_profile || '';
+            document.getElementById('address').value = user.address || '';
+        } else {
+            M.toast({html: 'Error al cargar datos del usuario', classes: 'red'});
+        }
+    } catch (error) {
+        M.toast({html: 'Error de conexión', classes: 'red'});
+    }
+}
+
+// Update profile
+document.getElementById('profileForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const data = {
+        name: formData.get('name'),
+        lastName: formData.get('lastName'),
+        phoneNumber: formData.get('phoneNumber'),
+        birthdate: formData.get('birthdate'),
+        url_profile: formData.get('url_profile'),
+        address: formData.get('address')
+    };
+    
+    try {
+        const token = sessionStorage.getItem('token');
+        const response = await fetch('/api/users/me', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+            M.toast({html: 'Perfil actualizado exitosamente', classes: 'green'});
+        } else {
+            if (result.errors) {
+                result.errors.forEach(error => {
+                    M.toast({html: error, classes: 'red'});
+                });
+            } else {
+                M.toast({html: result.message, classes: 'red'});
+            }
+        }
+    } catch (error) {
+        M.toast({html: 'Error de conexión', classes: 'red'});
+    }
+});
+
+// Load data when page loads
+document.addEventListener('DOMContentLoaded', loadUserData);
+</script>

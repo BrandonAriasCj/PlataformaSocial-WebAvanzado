@@ -1,0 +1,24 @@
+<div class="container">
+    <div class="row">
+        <div class="col s12 m8 l6 offset-m2 offset-l3">
+            <div class="card">
+                <div class="card-content center-align">
+                    <i class="material-icons large red-text" style="font-size: 100px;">block</i>
+                    <h2 class="red-text">403</h2>
+                    <h4>Acceso Denegado</h4>
+                    <p class="flow-text">
+                        <%= message || 'No tienes permisos suficientes para acceder a esta página.' %>
+                    </p>
+                    <div class="row">
+                        <div class="col s12">
+                            <a href="/dashboard" class="btn waves-effect waves-light blue">
+                                <i class="material-icons left">home</i>
+                                Ir al Dashboard
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
